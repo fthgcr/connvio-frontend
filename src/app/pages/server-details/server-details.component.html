@@ -1,0 +1,11 @@
+<div class="server-details" *ngIf="server">
+  <h2>{{ server.name }}</h2>
+  <p><strong>Açıklama:</strong> {{ server.description }}</p>
+  <p><strong>Sahibi:</strong> {{ server.ownerUsername }}</p>
+  <p><strong>Üye Sayısı:</strong> {{ server.memberCount }}</p>
+  <p><strong>Oluşturulma Tarihi:</strong> {{ server.createdAt | date:'medium' }}</p>
+  <p><strong>Son Güncelleme:</strong> {{ server.updatedAt | date:'medium' }}</p>
+</div>
+<div class="loading-message" *ngIf="!server">
+  <p>Sunucu bilgileri yükleniyor...</p>
+</div> 

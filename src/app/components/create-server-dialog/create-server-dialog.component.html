@@ -1,0 +1,40 @@
+<form [formGroup]="serverForm" (ngSubmit)="onSubmit()">
+  <div class="field">
+    <label for="name">Sunucu Adı</label>
+    <input 
+      id="name" 
+      type="text" 
+      pInputText 
+      formControlName="name"
+      [class.ng-invalid]="serverForm.get('name')?.touched && serverForm.get('name')?.invalid"
+      class="w-full">
+    <small class="text-red-500" *ngIf="nameErrors">
+      {{ nameErrors }}
+    </small>
+  </div>
+
+  <div class="field">
+    <label for="description">Açıklama</label>
+    <textarea 
+      id="description" 
+      pInputTextarea 
+      formControlName="description"
+      [rows]="3" 
+      class="w-full"></textarea>
+    <small class="text-red-500" *ngIf="serverForm.get('description')?.touched && serverForm.get('description')?.errors?.['maxlength']">
+      Açıklama en fazla 1000 karakter olmalıdır
+    </small>
+  </div>
+
+  <div class="flex justify-content-end gap-2">
+    <p-button 
+      label="İptal" 
+      (click)="close()" 
+      styleClass="p-button-text"></p-button>
+    <p-button 
+      label="Oluştur" 
+      type="submit" 
+      [loading]="isSubmitting"
+      [disabled]="!serverForm.valid || isSubmitting"></p-button>
+  </div>
+</form> 

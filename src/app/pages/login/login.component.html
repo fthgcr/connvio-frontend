@@ -1,0 +1,39 @@
+<p-toast></p-toast>
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Hoş Geldiniz</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username" 
+          placeholder="Kullanıcı adınızı giriniz">
+        <div class="error-message" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+          Kullanıcı adı gereklidir
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Şifre</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Şifrenizi giriniz">
+        <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          Şifre gereklidir
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="!loginForm.valid">
+        Giriş Yap
+      </button>
+      
+      <div class="auth-link">
+        Hesabınız yok mu?<a routerLink="/register">Kayıt Ol</a>
+      </div>
+    </form>
+  </div>
+</div> 

@@ -1,0 +1,11 @@
+<form [formGroup]="serverForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name">Sunucu Adı</label>
+    <input id="name" formControlName="name" />
+  </div>
+  <div>
+    <label for="description">Açıklama</label>
+    <textarea id="description" formControlName="description"></textarea>
+  </div>
+  <button type="submit" [disabled]="serverForm.invalid">Güncelle</button>
+</form> 

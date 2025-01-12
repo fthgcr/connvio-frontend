@@ -1,0 +1,48 @@
+<div class="layout-container">
+  <nav class="servers-sidebar">
+    <div class="servers-list">
+      <div *ngFor="let server of servers" 
+           class="server-item"
+           [class.active]="selectedServerId === server.id"
+           (click)="selectServer(server)">
+        <div class="server-avatar">
+          {{ server.name.charAt(0).toUpperCase() }}
+        </div>
+      </div>
+    </div>
+    <div class="create-server">
+      <button class="add-server-btn" (click)="showCreateServerDialog()">+</button>
+    </div>
+  </nav>
+
+  <aside class="server-panel">
+    <div class="server-header">
+      <h2>Sunucu Adı</h2>
+    </div>
+    <div class="channels-list">
+      <!-- Kanallar buraya gelecek -->
+    </div>
+    <div class="user-profile">
+      <div class="profile-info">
+        <img src="assets/default-avatar.png" alt="Profile" class="avatar">
+        <div class="user-details">
+          <span class="username">Kullanıcı Adı</span>
+          <span class="status">Online</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <aside class="members-panel">
+    <div class="members-header">
+      <h3>Üyeler</h3>
+    </div>
+    <div class="members-list">
+      <!-- Üyeler buraya gelecek -->
+    </div>
+  </aside>
+</div> 

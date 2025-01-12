@@ -1,0 +1,25 @@
+.server-details {
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  p {
+    margin-bottom: 10px;
+    
+    strong {
+      font-weight: 600;
+      margin-right: 8px;
+    }
+  }
+}
+
+// Loading state styles
+.loading-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+} 
