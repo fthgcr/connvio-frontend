@@ -1,81 +1,63 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthResponse } from '../../core/models/auth.dto';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    RouterLink, 
-    ToastModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule
   ],
-  providers: [MessageService]
+  providers: [MessageService],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private apiService: ApiService,
-    private router: Router,
     private messageService: MessageService,
-    private authService: AuthService
+    private router: Router
   ) {
-    this.messageService.clear();
-    
     this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.apiService.registerUser(this.registerForm.value).subscribe({
-        next: (response: AuthResponse) => {
-          this.authService.setToken(response.token);
-          
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Başarılı',
-            detail: 'Kayıt işlemi başarıyla tamamlandı.',
-            life: 3000,
-            closable: true,
-            styleClass: 'custom-toast'
-          });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        },
-        error: (error: HttpErrorResponse) => {
-          let errorMessage = 'Bir hata oluştu';
-          
-          if (error.error?.turkishMessage) {
-            errorMessage = error.error.turkishMessage;
-          }
+    if (this.registerForm.invalid) return;
 
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Hata',
-            detail: errorMessage,
-            life: 5000,
-            closable: true,
-            styleClass: 'custom-toast'
-          });
-        }
-      });
-    }
+    this.apiService.registerUser(this.registerForm.value).subscribe({
+      next: (response: AuthResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Başarılı',
+          detail: 'Kayıt işlemi başarıyla tamamlandı'
+        });
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Hata',
+          detail: error.error?.message || 'Kayıt işlemi sırasında bir hata oluştu'
+        });
+      }
+    });
   }
 } 

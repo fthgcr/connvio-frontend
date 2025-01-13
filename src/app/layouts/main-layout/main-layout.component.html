@@ -13,11 +13,25 @@
     <div class="create-server">
       <button class="add-server-btn" (click)="showCreateServerDialog()">+</button>
     </div>
+    <div class="server-actions">
+      <p-button 
+        icon="pi pi-plus" 
+        (click)="showJoinServerDialog()"
+        styleClass="p-button-rounded p-button-text"
+        pTooltip="Sunucuya Katıl">
+      </p-button>
+    </div>
   </nav>
 
   <aside class="server-panel" *ngIf="selectedServer">
     <div class="server-header">
       <h2>{{ selectedServer.name }}</h2>
+      <p-button 
+        icon="pi pi-user-plus" 
+        (click)="showInviteDialog()"
+        styleClass="p-button-text"
+        pTooltip="Sunucuya Davet Et">
+      </p-button>
     </div>
     <div class="channel-controls">
       <button class="create-channel-btn" (click)="showCreateChannelDialog()">
@@ -25,15 +39,15 @@
       </button>
     </div>
     <div class="channels-list">
-      <div class="channel-category">
+      <div class="text-channels">
         <h3>Metin Kanalları</h3>
-        <div *ngFor="let channel of textChannels" 
-             class="channel-item"
-             [class.active]="selectedChannelId === channel.id"
-             (click)="selectChannel(channel)">
-          <i class="pi pi-hashtag"></i>
-          {{ channel.name }}
-        </div>
+        <ul>
+          <li *ngFor="let channel of textChannels"
+              (click)="selectChannel(channel)"
+              [class.active]="selectedChannelId === channel.id">
+            # {{ channel.name }}
+          </li>
+        </ul>
       </div>
       <div class="channel-category">
         <h3>Ses Kanalları</h3>

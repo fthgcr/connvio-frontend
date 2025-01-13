@@ -40,12 +40,15 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.apiService.loginUser(this.loginForm.value).subscribe({
+      const loginData = {
+        username: this.loginForm.get('username')?.value,
+        password: this.loginForm.get('password')?.value
+      };
+
+      this.apiService.loginUser(loginData).subscribe({
         next: (response: AuthResponse) => {
-          console.log('Login response:', response);
-          if (response.token) {
+          if (response && response.token) {
             this.authService.setToken(response.token);
-            console.log('Stored token:', localStorage.getItem('token'));
             
             this.messageService.add({
               severity: 'success',
@@ -57,16 +60,18 @@ export class LoginComponent {
             setTimeout(() => {
               this.router.navigate(['/app']);
             }, 2000);
-          } else {
-            console.error('No token in response');
           }
         },
         error: (error: HttpErrorResponse) => {
           console.error('Login error:', error);
-          let errorMessage = 'Giriş başarısız';
+          let errorMessage = 'Kullanıcı adı veya şifre hatalı';
+          
           if (error.error?.turkishMessage) {
             errorMessage = error.error.turkishMessage;
+          } else if (error.status === 403) {
+            errorMessage = 'Giriş bilgileri hatalı';
           }
+          
           this.messageService.add({
             severity: 'error',
             summary: 'Hata',

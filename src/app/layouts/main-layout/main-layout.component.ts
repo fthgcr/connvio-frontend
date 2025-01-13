@@ -1,21 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
+import { ServerInviteDialogComponent } from '../../components/server-invite-dialog/server-invite-dialog.component';
+import { JoinServerDialogComponent } from '../../components/join-server-dialog/join-server-dialog.component';
 import { ApiService } from '../../core/services/api.service';
-import { ServerApiResponse } from '../../core/models/server.dto';
-import { Channel } from '../../core/models/channel.dto';
-import { ServerMember } from '../../core/models/member.dto';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CreateServerDialogComponent } from '../../components/create-server-dialog/create-server-dialog.component';
 import { CreateChannelDialogComponent } from '../../components/create-channel-dialog/create-channel-dialog.component';
-import { AuthService } from '../../core/services/auth.service';
+import { ServerMember } from '../../core/models/member.dto';
+import { Channel } from '../../core/models/channel.dto';
+import { ServerApiResponse } from '../../core/models/server.dto';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    ButtonModule,
+    TooltipModule
+  ],
   providers: [DialogService, MessageService],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.scss']
@@ -165,6 +174,31 @@ export class MainLayoutComponent implements OnInit {
             });
           }
         });
+      }
+    });
+  }
+
+  showInviteDialog() {
+    if (!this.selectedServer) return;
+
+    this.dialogService.open(ServerInviteDialogComponent, {
+      header: 'Sunucuya Davet Et',
+      width: '400px',
+      data: {
+        serverId: this.selectedServer.id
+      }
+    });
+  }
+
+  showJoinServerDialog() {
+    const ref = this.dialogService.open(JoinServerDialogComponent, {
+      header: 'Sunucuya Katıl',
+      width: '400px'
+    });
+
+    ref.onClose.subscribe((joined: boolean) => {
+      if (joined) {
+        this.loadServers(); // Sunucu listesini yenile
       }
     });
   }

@@ -10,4 +10,13 @@ export interface MessageResponse {
 
 export interface CreateMessageRequest {
     content: string;
+}
+
+export interface ChannelMessage {
+  id: number;
+  content: string;
+  sender: string;
+  channelId: number;
+  createdAt: string;
+  updatedAt: string;
 } 

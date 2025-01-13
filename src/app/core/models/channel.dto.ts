@@ -5,4 +5,9 @@ export interface Channel {
     serverId: number;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface CreateChannelRequest {
+    name: string;
+    type: 'TEXT' | 'VOICE';
 } 
