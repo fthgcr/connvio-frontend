@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { AuthResponse } from '../../core/models/auth.dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private apiService: ApiService, private messageService: MessageService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private messageService: MessageService,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -37,7 +44,7 @@ export class LoginComponent {
         next: (response: AuthResponse) => {
           console.log('Login response:', response);
           if (response.token) {
-            localStorage.setItem('token', response.token);
+            this.authService.setToken(response.token);
             console.log('Stored token:', localStorage.getItem('token'));
             
             this.messageService.add({

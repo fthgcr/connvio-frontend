@@ -1,27 +1,17 @@
-import {
-  HttpRequest,
-  HttpHandlerFn,
-  HttpEvent,
-  HttpInterceptorFn
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
-export const authInterceptor: HttpInterceptorFn = (
-  request: HttpRequest<unknown>, 
-  next: HttpHandlerFn
-): Observable<HttpEvent<unknown>> => {
-  const token = localStorage.getItem('token');
-  console.log('Current token:', token); // Debug log
-  
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const token = authService.getToken();
+
   if (token) {
-    const clonedRequest = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
+    const authReq = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
     });
-    console.log('Request with token:', clonedRequest); // Debug log
-    return next(clonedRequest);
+    return next(authReq);
   }
-  
-  return next(request);
+
+  return next(req);
 }; 

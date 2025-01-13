@@ -15,34 +15,60 @@
     </div>
   </nav>
 
-  <aside class="server-panel">
+  <aside class="server-panel" *ngIf="selectedServer">
     <div class="server-header">
-      <h2>Sunucu Adı</h2>
+      <h2>{{ selectedServer.name }}</h2>
+    </div>
+    <div class="channel-controls">
+      <button class="create-channel-btn" (click)="showCreateChannelDialog()">
+        <i class="pi pi-plus"></i> Kanal Ekle
+      </button>
     </div>
     <div class="channels-list">
-      <!-- Kanallar buraya gelecek -->
-    </div>
-    <div class="user-profile">
-      <div class="profile-info">
-        <img src="assets/default-avatar.png" alt="Profile" class="avatar">
-        <div class="user-details">
-          <span class="username">Kullanıcı Adı</span>
-          <span class="status">Online</span>
+      <div class="channel-category">
+        <h3>Metin Kanalları</h3>
+        <div *ngFor="let channel of textChannels" 
+             class="channel-item"
+             [class.active]="selectedChannelId === channel.id"
+             (click)="selectChannel(channel)">
+          <i class="pi pi-hashtag"></i>
+          {{ channel.name }}
+        </div>
+      </div>
+      <div class="channel-category">
+        <h3>Ses Kanalları</h3>
+        <div *ngFor="let channel of voiceChannels" 
+             class="channel-item"
+             [class.active]="selectedChannelId === channel.id"
+             (click)="selectChannel(channel)">
+          <i class="pi pi-volume-up"></i>
+          {{ channel.name }}
         </div>
       </div>
     </div>
   </aside>
 
-  <main class="main-content">
+  <main class="content-area">
     <router-outlet></router-outlet>
   </main>
 
-  <aside class="members-panel">
+  <aside class="members-panel" *ngIf="selectedServer">
     <div class="members-header">
-      <h3>Üyeler</h3>
+      <h3>Üyeler - {{ serverMembers.length }}</h3>
     </div>
     <div class="members-list">
-      <!-- Üyeler buraya gelecek -->
+      <div *ngFor="let member of serverMembers" class="member-item">
+        <div class="member-avatar">
+          <img [src]="member.avatarUrl || 'assets/default-avatar.png'" 
+               [alt]="member.username">
+        </div>
+        <div class="member-info">
+          <span class="member-name">{{ member.username }}</span>
+          <span class="member-status" [class]="member.status">
+            {{ member.status }}
+          </span>
+        </div>
+      </div>
     </div>
   </aside>
 </div> 

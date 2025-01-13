@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { AuthResponse } from '../../core/models/auth.dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,8 @@ export class RegisterComponent {
     private fb: FormBuilder, 
     private apiService: ApiService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {
     this.messageService.clear();
     
@@ -43,7 +45,7 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.apiService.registerUser(this.registerForm.value).subscribe({
         next: (response: AuthResponse) => {
-          localStorage.setItem('token', response.token);
+          this.authService.setToken(response.token);
           
           this.messageService.add({
             severity: 'success',
